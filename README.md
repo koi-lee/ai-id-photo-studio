@@ -106,12 +106,37 @@ python scripts/nose_liquify.py --image 成片.jpg --auto --out 修正.png
 python3 -m venv ~/.venvs/idphoto
 ~/.venvs/idphoto/bin/pip install pillow opencv-python numpy
 
-# 2) 后处理：裁切 + 缩放 + 自适应锐化 + 输出高清 JPEG
+# 2) 后处理：按规格裁切 + 缩放 + 自适应锐化 + 输出高清 JPEG
 ~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py 生成的图.png \
   --spec 1inch --outdir ./output -n 一寸白底_黑色衬衫_经典正式
+
+# 3) 一键出三档（各档自动分目录，不会互相覆盖）
+~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py 生成的图.png \
+  --spec 1inch --outdir ./output --tiers hd,std,uhd -n 一寸白底_黑色衬衫_经典正式
 ```
 
-把 `skill/` 目录整体拷贝到你的 agent 技能目录即可使用（SKILL.md 自洽，references 路径正确）。
+`--spec` 可选值：`small-1inch` · `driving-license` · `1inch`（默认）· `large-1inch` · `small-2inch` · `2inch` · `large-2inch` · `marriage`
+
+📖 **[全部可运行示例 →](docs/usage-examples.md)** —— 每条命令都能用仓库自带的 `examples/` 直接复现，**不需要任何 API 额度**（后处理与液化全程本地运行）。
+
+先验证环境是否就绪：
+
+```bash
+~/.venvs/idphoto/bin/python skill/scripts/selfcheck.py
+# → 全部通过（24 项 = 8 种规格 × 3 个档位）
+```
+
+### 安装为技能
+
+把 `skill/` 目录整体拷贝到你的 agent 技能目录即可 —— SKILL.md 自洽、references 相对路径正确：
+
+| 平台 | 技能目录 |
+|---|---|
+| 通用 / Claude Code | `~/.claude/skills/<skill-name>/` 或项目内 `.claude/skills/` |
+| WorkBuddy | `~/.workbuddy/skills/<skill-name>/` 或项目内 `.workbuddy/skills/` |
+
+技能本体是**平台无关**的：主文件把"生图"抽象为通道选择，平台细节下沉到 `references/platform-*.md`。
+脚本已在 **macOS + Python 3.13** 环境完成全量回归测试（8 种规格 × 2 档 = 16 项尺寸校验全部通过）。
 
 ## 仓库结构
 
@@ -121,15 +146,16 @@ ai-id-photo-studio/
 │   ├── SKILL.md              ← 平台无关的完整工作流（七条铁律 + 六阶段）
 │   ├── references/           ← specs 规格库 · wardrobe 服装库 · hairstyles 发型库
 │   │                            prompts 模板 · quality 画质 · platform-* 通道 · liquify 液化
-│   ├── scripts/              ← process_id_photo 后处理 · nose_liquify 液化微调
+│   ├── scripts/              ← process_id_photo 后处理 · nose_liquify 液化微调 · selfcheck 规格自检
 │   └── assets/               ← 人脸关键点模型（MediaPipe Face Landmarker）
 ├── examples/                 ← AI 生成模特示例（male / female 各 5 张）
 └── docs/
     ├── workflow.md           ← 端到端标准作业流程（含合规边界）
+    ├── usage-examples.md     ← 全部可运行示例（无需额度即可复现）
     └── roadmap.md            ← 规格与功能 Roadmap
 ```
 
-> 逐步骤的操作细节与命令见 [`docs/workflow.md`](docs/workflow.md)；后续规划见 [`docs/roadmap.md`](docs/roadmap.md)。
+> 操作细节见 [`docs/workflow.md`](docs/workflow.md) ｜ 可跑的命令见 [`docs/usage-examples.md`](docs/usage-examples.md) ｜ 规划见 [`docs/roadmap.md`](docs/roadmap.md)
 
 ## 隐私声明
 

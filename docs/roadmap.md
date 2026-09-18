@@ -12,6 +12,8 @@
 - [x] 客观画质测量（Laplacian）+ 根因排查方法论
 - [x] 局部几何液化微调（不磨皮改五官）
 - [x] 结婚证合影横版规格（53×35mm，626×413 @300dpi）
+- [x] 规格自检脚本：8 种规格 × 3 档 = 24 项尺寸/DPI 校验（`skill/scripts/selfcheck.py`）
+- [x] 可运行示例文档（`docs/usage-examples.md`，全部无需额度即可复现）
 
 ## 计划中
 
@@ -50,7 +52,7 @@
 
 - [ ] `--sharpen-target`：自动匹配源图锐度（目标 = 源图 Laplacian × 1.05）
 - [ ] `scripts/quality_report.py`：一条命令输出修图前后的客观对比表
-- [ ] 单元测试：给规格表与裁剪逻辑补 pytest 覆盖
+- [ ] 把 `selfcheck.py` 的尺寸校验扩展为 pytest 用例（补裁剪逻辑与边界条件的覆盖）
 
 ## 不做
 
