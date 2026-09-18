@@ -33,6 +33,33 @@ import argparse
 import os
 import sys
 
+
+# --- 跨平台终端编码 ---------------------------------------------------------
+# Windows 默认 GBK/CP1252 终端下直接 print 中文或 ℹ️ / → 之类符号会抛
+# UnicodeEncodeError 让脚本崩掉。这里做分级处理：
+#   · 当前编码装不下中文 → 整条流切 UTF-8
+#   · 装得下（如 cp936）  → 只把错误策略降级，中文照常显示、个别符号退化为 ?
+def _fix_console_encoding():
+    for stream in (sys.stdout, sys.stderr):
+        enc = (getattr(stream, "encoding", "") or "").lower()
+        if not enc:
+            continue
+        try:
+            "中".encode(enc)
+        except (UnicodeEncodeError, LookupError):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, ValueError, OSError):
+                pass
+        else:
+            try:
+                stream.reconfigure(errors="replace")
+            except (AttributeError, ValueError, OSError):
+                pass
+
+
+_fix_console_encoding()
+
 from PIL import Image, ImageFilter
 import cv2
 import numpy as np

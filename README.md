@@ -1,5 +1,10 @@
 # AI ID Photo Studio · AI 证件照工作室
 
+[![CI](https://github.com/koi-lee/ai-id-photo-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/koi-lee/ai-id-photo-studio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Agent Skill](https://img.shields.io/badge/Agent%20Skill-ready-8a2be2.svg)](skill/SKILL.md)
+
 > 用一个 Agent 技能，把日常自拍变成**合规、清晰、可交付**的中国标准证件照。
 >
 > Turn a casual selfie into a **compliant, sharp, print-ready** Chinese ID photo — with one agent skill.
@@ -104,7 +109,7 @@ python scripts/nose_liquify.py --image 成片.jpg --auto --out 修正.png
 ```bash
 # 1) 隔离环境装依赖（不要全局 pip install）
 python3 -m venv ~/.venvs/idphoto
-~/.venvs/idphoto/bin/pip install pillow opencv-python numpy
+~/.venvs/idphoto/bin/pip install -r requirements.txt
 
 # 2) 后处理：按规格裁切 + 缩放 + 自适应锐化 + 输出高清 JPEG
 ~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py 生成的图.png \
@@ -136,7 +141,9 @@ python3 -m venv ~/.venvs/idphoto
 | WorkBuddy | `~/.workbuddy/skills/<skill-name>/` 或项目内 `.workbuddy/skills/` |
 
 技能本体是**平台无关**的：主文件把"生图"抽象为通道选择，平台细节下沉到 `references/platform-*.md`。
-脚本已在 **macOS + Python 3.13** 环境完成全量回归测试（8 种规格 × 2 档 = 16 项尺寸校验全部通过）。
+
+脚本的尺寸与 DPI 校验由 CI 在 **Linux / macOS / Windows × Python 3.10 / 3.13** 六种组合上自动回归（状态见顶部 CI 徽章）。
+终端编码也做了兜底：在英文 Windows（cp1252）、`LANG=C` 的 Linux（ascii）以及中文 Windows（GBK）下打印中文与符号都不会崩溃 —— 这三条正是把脚本分享给别人时最常见的"在我这能跑"翻车点。
 
 ## 仓库结构
 
@@ -149,6 +156,8 @@ ai-id-photo-studio/
 │   ├── scripts/              ← process_id_photo 后处理 · nose_liquify 液化微调 · selfcheck 规格自检
 │   └── assets/               ← 人脸关键点模型（MediaPipe Face Landmarker）
 ├── examples/                 ← AI 生成模特示例（male / female 各 5 张）
+├── requirements.txt          ← 运行依赖（Pillow / numpy / opencv-python）
+├── .github/workflows/ci.yml  ← 跨平台 CI（Linux / macOS / Windows 矩阵）
 └── docs/
     ├── workflow.md           ← 端到端标准作业流程（含合规边界）
     ├── usage-examples.md     ← 全部可运行示例（无需额度即可复现）

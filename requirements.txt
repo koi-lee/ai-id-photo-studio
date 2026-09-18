@@ -1,0 +1,19 @@
+# ============================================================
+#  ai-id-photo-studio —— 运行依赖
+#
+#  建议装进隔离虚拟环境，不要全局 pip install：
+#    python3 -m venv ~/.venvs/idphoto
+#    ~/.venvs/idphoto/bin/pip install -r requirements.txt
+#    ~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py <输入图>
+# ============================================================
+
+# 核心后处理链（process_id_photo.py / selfcheck.py）
+# 服务器、容器、CI 等无图形界面的环境，可用 opencv-python-headless 替代 opencv-python，
+# 二者的 cv2 API 完全一致，只是省掉 GUI 相关动态库。
+Pillow>=10.0
+numpy>=1.24
+opencv-python>=4.8
+
+# 可选：鼻翼关键点检测（只有 nose_symmetry_fix.py 需要）
+# 体积较大（含模型运行时），仅在需要自动关键点定位时安装。
+# mediapipe>=0.10
