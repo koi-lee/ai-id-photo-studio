@@ -50,6 +50,8 @@ SPECS = {
     "large-2inch": {"label": "大二寸",     "px300": (413, 630), "hd_width": 1652, "head_offset": 20},
     "marriage":    {"label": "结婚证合影", "px300": (626, 413), "hd_width": 2504, "head_offset": 0},
 }
+# 驾照与"小一寸"尺寸相同（22×32mm），单独列一个别名方便按用途选
+SPECS["driving-license"] = dict(SPECS["small-1inch"], label="驾照")
 DEFAULT_SPEC = "1inch"
 
 # 档位定义：scale 为相对高清档宽度的倍数
