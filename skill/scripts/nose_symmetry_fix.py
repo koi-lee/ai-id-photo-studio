@@ -27,6 +27,7 @@
 import argparse
 import os
 import sys
+import urllib.request
 
 
 # --- 跨平台终端编码 ---------------------------------------------------------
@@ -75,15 +76,45 @@ MODEL_URL = ("https://storage.googleapis.com/mediapipe-models/face_landmarker/"
              "face_landmarker/float16/1/face_landmarker.task")
 
 
+def _ensure_model(model_path):
+    """模型缺失时自动从官方地址下载。
+
+    技能包为控制体积（平台上限 3MB）不内置该模型（约 3.6MB），
+    首次用到关键点定位时按需拉取；下载失败则给出手动命令。
+    """
+    if os.path.exists(model_path):
+        return True
+    parent = os.path.dirname(model_path)
+    try:
+        os.makedirs(parent, exist_ok=True)
+    except OSError:
+        pass
+    tmp = model_path + ".part"
+    try:
+        print("ℹ️ 首次使用关键点定位，正在下载模型（约 3.6MB）…")
+        urllib.request.urlretrieve(MODEL_URL, tmp)
+        os.replace(tmp, model_path)
+        print(f"ℹ️ 模型已保存：{model_path}")
+        return True
+    except Exception as exc:  # 网络不可用 / 无写权限 / 代理拦截
+        if os.path.exists(tmp):
+            try:
+                os.remove(tmp)
+            except OSError:
+                pass
+        print(
+            f"错误：缺少关键点模型，且自动下载失败（{exc}）\n"
+            f"请手动下载后重试：\n  curl -sL -o '{model_path}' {MODEL_URL}",
+            file=sys.stderr,
+        )
+        return False
+
+
 def detect_landmarks(img_bgr, model_path=None):
     """返回面部关键点坐标数组 (N, 2)，未检测到返回 None。"""
     model_path = model_path or MODEL_PATH
-    if not os.path.exists(model_path):
-        sys.exit(
-            f"错误：找不到关键点模型 {model_path}\n"
-            f"请先下载：\n  mkdir -p {os.path.dirname(model_path)}\n"
-            f"  curl -sL -o {model_path} {MODEL_URL}"
-        )
+    if not _ensure_model(model_path):
+        sys.exit(1)
 
     h, w = img_bgr.shape[:2]
     # 强制使用 CPU delegate：部分 macOS/ARM 环境下 Metal 后端会崩溃
