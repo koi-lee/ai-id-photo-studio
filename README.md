@@ -118,13 +118,18 @@ python3 -m venv ~/.venvs/idphoto
 ```
 ai-id-photo-studio/
 ├── skill/                    ← 融合后的技能本体，可直接装用
-│   ├── SKILL.md              ← 平台无关的完整工作流
-│   ├── references/           ← 规格库 / 服装库 / 发型库 / prompt / 画质 / 液化
-│   ├── scripts/              ← 后处理 + 液化微调
-│   └── assets/               ← 人脸关键点模型
-├── examples/                 ← AI 生成模特示例（male / female）
-└── docs/                     ← 工作流说明与 Roadmap
+│   ├── SKILL.md              ← 平台无关的完整工作流（七条铁律 + 六阶段）
+│   ├── references/           ← specs 规格库 · wardrobe 服装库 · hairstyles 发型库
+│   │                            prompts 模板 · quality 画质 · platform-* 通道 · liquify 液化
+│   ├── scripts/              ← process_id_photo 后处理 · nose_liquify 液化微调
+│   └── assets/               ← 人脸关键点模型（MediaPipe Face Landmarker）
+├── examples/                 ← AI 生成模特示例（male / female 各 5 张）
+└── docs/
+    ├── workflow.md           ← 端到端标准作业流程（含合规边界）
+    └── roadmap.md            ← 规格与功能 Roadmap
 ```
+
+> 逐步骤的操作细节与命令见 [`docs/workflow.md`](docs/workflow.md)；后续规划见 [`docs/roadmap.md`](docs/roadmap.md)。
 
 ## 隐私声明
 
