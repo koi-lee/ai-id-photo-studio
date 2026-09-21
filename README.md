@@ -55,6 +55,16 @@
 
 ![AI 示例模特双白衬衫红底合照](examples/couple/couple-white-shirts-red-preview.png)
 
+同一对 AI 示例人物的四款成套服饰与发型变体：
+
+| 经典正式：黑西装与米白礼服 | 柔和现代：浅灰西装与米白连衣裙 |
+| --- | --- |
+| ![黑西装与低盘发](examples/couple/black-suit-ivory-dress.png) | ![浅灰西装与齐肩发](examples/couple/grey-suit-ivory-dress.png) |
+| **新中式：米白立领与提花旗袍** | **清爽蓝白：浅蓝衬衫与白衬衫** |
+| ![成套新中式与露额短发](examples/couple/ivory-chinese-outfits.png) | ![蓝白衬衫与低马尾](examples/couple/blue-white-shirts.png) |
+
+这是服饰与发型同时变化的整体风格示例，不是控制单一变量的效果测试；灰西装款男生发型变化较小，不宣称五款男发型均已实现。
+
 只使用上方示例男生与示例女生的 AI 基础原片，经宿主内置图像工具生成。此图展示双人成套穿搭与红底构图，**不是证件照 Skill 脚本实测输出，不是真人合影，也不保证可用于婚姻登记**。没有使用作者或家属照片。
 
 来源、提示词及自查限制见 [示例制作记录](examples/couple/README.md)；连续修订与归档规则见 [双人修订指南](skill/references/couple-editing.md)。
