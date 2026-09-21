@@ -51,6 +51,14 @@
 </tr>
 </table>
 
+### 双人红底风格预览（AI 示例模特）
+
+![AI 示例模特双白衬衫红底合照](examples/couple/couple-white-shirts-red-preview.png)
+
+只使用上方示例男生与示例女生的 AI 基础原片，经宿主内置图像工具生成。此图展示双人成套穿搭与红底构图，**不是证件照 Skill 脚本实测输出，不是真人合影，也不保证可用于婚姻登记**。没有使用作者或家属照片。
+
+来源、提示词及自查限制见 [示例制作记录](examples/couple/README.md)；连续修订与归档规则见 [双人修订指南](skill/references/couple-editing.md)。
+
 ## 三个核心能力
 
 ### 1. 多通道生图编排，额度断了能续跑
