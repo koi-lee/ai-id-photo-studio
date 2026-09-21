@@ -5,11 +5,11 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-ready-8a2be2.svg)](skill/SKILL.md)
 
-> 用一个 Agent 技能，把日常自拍变成**合规、清晰、可交付**的中国标准证件照。
+> 开源 AI 证件照 Agent 技能：换装、换发型、背景替换、双人合照风格预览与本地裁剪后处理。以中国常用尺寸预设为主，不保证正式证件受理。
 >
-> Turn a casual selfie into a **compliant, sharp, print-ready** Chinese ID photo — with one agent skill.
+> Open-source AI ID photo workflow: outfit and hairstyle previews, background changes, couple portraits, and local photo post-processing. Acceptance by an issuing authority is not guaranteed.
 
-[English](#english) ｜ 中文
+[简体中文](README.md) ｜ [English](#english) ｜ [繁體中文](README.zh-Hant.md) ｜ [日本語](README.ja.md) ｜ [한국어](README.ko.md)
 
 ---
 
@@ -124,6 +124,20 @@ python scripts/nose_liquify.py --image 成片.jpg --auto --out 修正.png
 
 ## 快速上手
 
+### 常见问题
+
+**这是在线证件照网站吗？** 不是。这是可交给 Agent 使用的技能文件与 Python 工具，不是独立在线服务。
+
+**是否免费？** 仓库代码采用 MIT 许可；本地后处理不需要生图额度。生成或换装所选服务可能收费。
+
+**支持日本、韩国、台湾或香港的官方证件规格吗？** 目前没有提供这些地区的专用合规校验；文档翻译不代表新增证件规格支持。
+
+**合照能直接办结婚证吗？** 公开合照为 AI 示例人物的风格预览，不是受理证明。正式办理请按当地机关要求准备真实照片。
+
+**图片会上传吗？** 本地脚本在本机处理；选择远程生成服务时，输入会交给该服务。不要把私人原片或衍生图提交到公开仓库。
+
+### 本地运行
+
 ```bash
 # 1) 隔离环境装依赖（不要全局 pip install）
 python3 -m venv ~/.venvs/idphoto
@@ -222,7 +236,7 @@ ai-id-photo-studio/
 
 <h2 id="english">English</h2>
 
-**AI ID Photo Studio** is an agent skill that turns an everyday selfie into a compliant, sharp, print-ready Chinese ID photo.
+**AI ID Photo Studio** is an open-source agent skill for AI ID photo styling and local post-processing, primarily using Chinese size presets. It is not a hosted web app and does not guarantee official acceptance. Japanese, Korean and Traditional Chinese documentation does not add jurisdiction-specific compliance support.
 
 **What makes it different:**
 
