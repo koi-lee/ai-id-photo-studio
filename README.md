@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/koi-lee/ai-id-photo-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/koi-lee/ai-id-photo-studio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python CI: 3.10 / 3.13](https://img.shields.io/badge/Python%20CI-3.10%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-ready-8a2be2.svg)](skill/SKILL.md)
 
 > 开源 AI 证件照 Agent 技能：换装、换发型、背景替换、双人合照风格预览与本地裁剪后处理。以中国常用尺寸预设为主，不保证正式证件受理。
@@ -124,6 +124,8 @@ python scripts/nose_liquify.py --image 成片.jpg --auto --out 修正.png
 
 ## 快速上手
 
+本仓库提供 Agent 工作流和本地 Python 后处理工具，不内置图像生成模型。换装、换发型和背景生成需要你选择的宿主或第三方服务；裁切、尺寸转换和局部液化由本地脚本处理。
+
 ### 常见问题
 
 **这是在线证件照网站吗？** 不是。这是可交给 Agent 使用的技能文件与 Python 工具，不是独立在线服务。
@@ -144,12 +146,12 @@ python3 -m venv ~/.venvs/idphoto
 ~/.venvs/idphoto/bin/pip install -r requirements.txt
 
 # 2) 后处理：按规格裁切 + 缩放 + 自适应锐化 + 输出高清 JPEG
-~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py 生成的图.png \
-  --spec 1inch --outdir ./output -n 一寸白底_黑色衬衫_经典正式
+~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py examples/male/base-portrait.jpg \
+  --spec 1inch --outdir ./output/demo --no-watermark
 
 # 3) 一键出三档（各档自动分目录，不会互相覆盖）
-~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py 生成的图.png \
-  --spec 1inch --outdir ./output --tiers hd,std,uhd -n 一寸白底_黑色衬衫_经典正式
+~/.venvs/idphoto/bin/python skill/scripts/process_id_photo.py examples/male/base-portrait.jpg \
+  --spec 1inch --outdir ./output/demo --tiers hd,std,uhd --no-watermark
 ```
 
 `--spec` 可选值：`small-1inch` · `driving-license` · `1inch`（默认）· `large-1inch` · `small-2inch` · `2inch` · `large-2inch` · `marriage`
@@ -174,7 +176,7 @@ python3 -m venv ~/.venvs/idphoto
 
 技能本体是**平台无关**的：主文件把"生图"抽象为通道选择，平台细节下沉到 `references/platform-*.md`。
 
-脚本的尺寸与 DPI 校验由 CI 在 **Linux / macOS / Windows × Python 3.10 / 3.13** 六种组合上自动回归（状态见顶部 CI 徽章）。
+核心规格自检由 CI 在 **Linux / macOS / Windows × Python 3.10 / 3.13** 六种组合上运行；可选脚本另在 Ubuntu + Python 3.12 做命令行冒烟检查。这是 CI 覆盖范围，不代表其他 Python 版本或环境已验证。
 终端编码也做了兜底：在英文 Windows（cp1252）、`LANG=C` 的 Linux（ascii）以及中文 Windows（GBK）下打印中文与符号都不会崩溃 —— 这三条正是把脚本分享给别人时最常见的"在我这能跑"翻车点。
 
 ## 仓库结构
@@ -209,7 +211,7 @@ ai-id-photo-studio/
 生成的证件照**能否被受理，取决于办理机关**。本项目只负责技术实现，不保证过审：
 
 - 政务系统通常要求**真实拍摄的原始影像**，部分系统会做人脸比对与合成检测。
-- **结婚证合影**：《婚姻登记工作规范》要求双方"同一时间、同一地点共同拍摄"的合影，**不能使用合成照片**。AI 生成的双人合影建议只用于预览风格或情侣写真；正式登记请实拍，AI 仅用于底色替换与轻度修饰。
+- **结婚登记照片**：现行《婚姻登记工作规范》要求提交双方近期半身免冠同版合影；各地具体材料要求请以当地办事指南为准。AI 生成的双人合影仅作风格预览，不能据此保证可用于登记。
 - 请以当地办理机关的最新要求为准。
 
 ## Roadmap
@@ -243,10 +245,12 @@ ai-id-photo-studio/
 - **Multi-channel orchestration** — route each job to the right image model (third-party image-to-image API for full restyle, host built-in generation for quick drafts, *local* geometric liquify for surgical fixes that must not smooth skin). Interrupted jobs resume from a saved breakpoint instead of re-spending credits.
 - **Objective quality methodology** — file size is not sharpness. We measure Laplacian variance and edge gradients at normalised width, and always trace "looks blurry" back to the *source image resolution* rather than blindly upscaling.
 - **Surgical retouching without skin smoothing** — `cv2.remap` Gaussian liquify changes feature geometry while keeping 100% of the original skin texture.
-- **Chinese government-compliance knowledge** — verified specs for 1-inch through marriage-certificate photos, official background colour values, and real-world pitfalls collected from actual submissions.
+- **Chinese size presets and local post-processing** — pixel and DPI templates for common photo sizes, plus documented workflow constraints. These are technical presets, not official compliance validation; confirm current requirements with the issuing authority.
 
 **Specs supported:** 22×32 to 35×53 mm, including the horizontal 53×35 mm marriage-certificate format, in white / blue / red backgrounds.
 
-> ⚠️ **Compliance notice:** whether a generated photo is accepted is decided by the issuing authority. Marriage registration explicitly requires a photo taken *together, on site* — AI composites are for preview only. Always check your local authority's latest requirements.
+> ⚠️ **Compliance notice:** whether a generated photo is accepted is decided by the issuing authority. Current Chinese marriage-registration rules specify a recent, matching half-body photo of both applicants; check the local authority's latest instructions. An AI-generated composite is only a style preview and is not guaranteed to be accepted.
 
-**Privacy:** this repository contains **no real human photos**. All examples are AI-generated. Photos you process may be sent to the third-party generation API of your choice.
+**Privacy:** this repository contains **no real human photos**. All examples are AI-generated. Local crop, resize and retouch scripts process files on your device; image-generation providers you choose receive the inputs you send them. Do not add private originals or derivatives to a public repository.
+
+**Scope:** the repository contains presets for common Chinese photo sizes and checks output pixels and DPI. It does not verify current requirements from issuing authorities or guarantee acceptance. The examples use a public AI-generated portrait; no API account is needed for the local processing quick start.
