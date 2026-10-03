@@ -23,7 +23,7 @@ AI를 활용한 의상·헤어스타일·배경 변경 미리보기와 Python �
 
 ## 로컬 실행
 
-Python 3.10 이상을 준비하고 저장소 루트에서 실행합니다.
+핵심 규격 검사는 Linux·macOS·Windows에서 Python 3.10 및 3.13으로 CI 실행됩니다. 선택 스크립트는 Ubuntu + Python 3.12에서 CLI 스모크 검사를 합니다. 그 외 버전은 이 CI 매트릭스에서 검증하지 않았습니다. 저장소 루트에서 실행합니다.
 
 ```bash
 python3 -m venv .venv

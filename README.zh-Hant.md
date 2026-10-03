@@ -23,7 +23,7 @@
 
 ## 本機試用
 
-準備 Python 3.10 以上，在倉庫根目錄執行：
+CI 核心規格自檢涵蓋 Python 3.10 與 3.13（Linux、macOS、Windows）；可選腳本另以 Python 3.12 做命令列冒煙檢查。其他版本未列入此 CI 矩陣。在倉庫根目錄執行：
 
 ```bash
 python3 -m venv .venv
